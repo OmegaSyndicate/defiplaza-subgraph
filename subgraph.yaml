@@ -1,0 +1,56 @@
+specVersion: 0.0.2
+schema:
+   file: ./schema.graphql
+dataSources:
+   - kind: ethereum/contract
+     name: Contract
+     network: mainnet
+     source:
+        address: '0xe68c1d72340aeefe5be76eda63ae2f4bc7514110'
+        abi: Contract
+        startBlock: 13346613
+     mapping:
+        kind: ethereum/events
+        apiVersion: 0.0.5
+        language: wasm/assemblyscript
+        entities:
+           - Approval
+           - BootstrapBonus
+           - BootstrapCompleted
+           - Bootstrapped
+           - LiquidityAdded
+           - LiquidityRemoved
+           - MultiLiquidityAdded
+           - MultiLiquidityRemoved
+           - OwnershipTransferred
+           - Swapped
+           - Transfer
+        abis:
+           - name: Contract
+             file: ./abis/Contract.json
+           - name: ERC20
+             file: ./abis/ERC20.json
+        eventHandlers:
+           - event: Approval(indexed address,indexed address,uint256)
+             handler: handleApproval
+           - event: BootstrapBonus(address,address,uint256)
+             handler: handleBootstrapBonus
+           - event: BootstrapCompleted(address,address)
+             handler: handleBootstrapCompleted
+           - event: Bootstrapped(address,address,uint256,address,uint256)
+             handler: handleBootstrapped
+           - event: LiquidityAdded(address,address,uint256,uint256)
+             handler: handleLiquidityAdded
+           - event: LiquidityRemoved(address,address,uint256,uint256)
+             handler: handleLiquidityRemoved
+           - event: MultiLiquidityAdded(address,uint256,uint256)
+             handler: handleMultiLiquidityAdded
+           - event: MultiLiquidityRemoved(address,uint256,uint256)
+             handler: handleMultiLiquidityRemoved
+           - event: OwnershipTransferred(indexed address,indexed address)
+             handler: handleOwnershipTransferred
+           - event: Swapped(address,address,address,uint256,uint256)
+             handler: handleSwapped
+           - event: Transfer(indexed address,indexed address,uint256)
+             handler: handleTransfer
+        file: ./src/mapping.ts
