@@ -11,7 +11,7 @@ import {
 	OwnershipTransferred,
 	Swapped,
 	Transfer
-} from "../generated/Contract/Contract"
+} from "../generated/DefiPlaza/DefiPlaza"
 import { Swap } from "../generated/schema";
 import { DEX_TOKENS, DFP2_ADDRESS, ONE_BI, ZERO_BD } from "./constants";
 import { DexToken } from "./tokens";

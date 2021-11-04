@@ -1,5 +1,4 @@
 import { BigInt, BigDecimal, ethereum, Address } from '@graphprotocol/graph-ts';
-import { LiquidityAdded } from '../generated/Contract/Contract';
 import { ERC20 } from '../generated/Contract/ERC20';
 import { Daily, DailyToken, Factory, Hourly, HourlyToken, Pair, Token, Transaction } from '../generated/schema';
 import { BI_18, DFP2_ADDRESS, FACTORY_ADDRESS, ONE_BD, ONE_BI, STABLE_COINS, XDP2_ADDRESS, ZERO_BD, ZERO_BI } from './constants';
@@ -61,6 +60,7 @@ export function loadFactory(): Factory {
 		factory.dfp2TotalSupply = ZERO_BD;
 		factory.xdp2TotalSupply = ZERO_BD;
 		factory.dfp2MarketCap = ZERO_BD;
+		factory.xdp2Staked = ZERO_BD;
 		factory.save();
 	}
 

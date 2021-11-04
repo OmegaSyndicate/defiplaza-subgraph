@@ -209,6 +209,7 @@ export class Factory extends Entity {
     this.set("totalValueLockedUSD", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("dfp2TotalSupply", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("xdp2TotalSupply", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("xdp2Staked", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("dfp2MarketCap", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
@@ -272,6 +273,15 @@ export class Factory extends Entity {
 
   set xdp2TotalSupply(value: BigDecimal) {
     this.set("xdp2TotalSupply", Value.fromBigDecimal(value));
+  }
+
+  get xdp2Staked(): BigDecimal {
+    let value = this.get("xdp2Staked");
+    return value!.toBigDecimal();
+  }
+
+  set xdp2Staked(value: BigDecimal) {
+    this.set("xdp2Staked", Value.fromBigDecimal(value));
   }
 
   get dfp2MarketCap(): BigDecimal {

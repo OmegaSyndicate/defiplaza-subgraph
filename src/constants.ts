@@ -1,6 +1,5 @@
 /* eslint-disable prefer-const */
 import { BigInt, BigDecimal, Address } from '@graphprotocol/graph-ts'
-import { Factory as FactoryContract } from '../generated/schema'
 import { DexToken } from './tokens'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'

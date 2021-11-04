@@ -312,7 +312,7 @@ export class Transfer__Params {
   }
 }
 
-export class Contract__DFPconfigResult {
+export class DefiPlaza__DFPconfigResult {
   value0: boolean;
   value1: BigInt;
   value2: BigInt;
@@ -332,7 +332,7 @@ export class Contract__DFPconfigResult {
   }
 }
 
-export class Contract__listedTokensResult {
+export class DefiPlaza__listedTokensResult {
   value0: i32;
   value1: BigInt;
 
@@ -352,7 +352,7 @@ export class Contract__listedTokensResult {
   }
 }
 
-export class Contract__listingUpdateResult {
+export class DefiPlaza__listingUpdateResult {
   value0: Address;
   value1: Address;
 
@@ -369,26 +369,26 @@ export class Contract__listingUpdateResult {
   }
 }
 
-export class Contract extends ethereum.SmartContract {
-  static bind(address: Address): Contract {
-    return new Contract("Contract", address);
+export class DefiPlaza extends ethereum.SmartContract {
+  static bind(address: Address): DefiPlaza {
+    return new DefiPlaza("DefiPlaza", address);
   }
 
-  DFPconfig(): Contract__DFPconfigResult {
+  DFPconfig(): DefiPlaza__DFPconfigResult {
     let result = super.call(
       "DFPconfig",
       "DFPconfig():(bool,uint64,uint64)",
       []
     );
 
-    return new Contract__DFPconfigResult(
+    return new DefiPlaza__DFPconfigResult(
       result[0].toBoolean(),
       result[1].toBigInt(),
       result[2].toBigInt()
     );
   }
 
-  try_DFPconfig(): ethereum.CallResult<Contract__DFPconfigResult> {
+  try_DFPconfig(): ethereum.CallResult<DefiPlaza__DFPconfigResult> {
     let result = super.tryCall(
       "DFPconfig",
       "DFPconfig():(bool,uint64,uint64)",
@@ -399,7 +399,7 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Contract__DFPconfigResult(
+      new DefiPlaza__DFPconfigResult(
         value[0].toBoolean(),
         value[1].toBigInt(),
         value[2].toBigInt()
@@ -646,14 +646,14 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  listedTokens(param0: Address): Contract__listedTokensResult {
+  listedTokens(param0: Address): DefiPlaza__listedTokensResult {
     let result = super.call(
       "listedTokens",
       "listedTokens(address):(uint8,uint112)",
       [ethereum.Value.fromAddress(param0)]
     );
 
-    return new Contract__listedTokensResult(
+    return new DefiPlaza__listedTokensResult(
       result[0].toI32(),
       result[1].toBigInt()
     );
@@ -661,7 +661,7 @@ export class Contract extends ethereum.SmartContract {
 
   try_listedTokens(
     param0: Address
-  ): ethereum.CallResult<Contract__listedTokensResult> {
+  ): ethereum.CallResult<DefiPlaza__listedTokensResult> {
     let result = super.tryCall(
       "listedTokens",
       "listedTokens(address):(uint8,uint112)",
@@ -672,24 +672,24 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Contract__listedTokensResult(value[0].toI32(), value[1].toBigInt())
+      new DefiPlaza__listedTokensResult(value[0].toI32(), value[1].toBigInt())
     );
   }
 
-  listingUpdate(): Contract__listingUpdateResult {
+  listingUpdate(): DefiPlaza__listingUpdateResult {
     let result = super.call(
       "listingUpdate",
       "listingUpdate():(address,address)",
       []
     );
 
-    return new Contract__listingUpdateResult(
+    return new DefiPlaza__listingUpdateResult(
       result[0].toAddress(),
       result[1].toAddress()
     );
   }
 
-  try_listingUpdate(): ethereum.CallResult<Contract__listingUpdateResult> {
+  try_listingUpdate(): ethereum.CallResult<DefiPlaza__listingUpdateResult> {
     let result = super.tryCall(
       "listingUpdate",
       "listingUpdate():(address,address)",
@@ -700,7 +700,7 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Contract__listingUpdateResult(
+      new DefiPlaza__listingUpdateResult(
         value[0].toAddress(),
         value[1].toAddress()
       )

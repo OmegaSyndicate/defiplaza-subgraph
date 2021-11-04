@@ -24,6 +24,7 @@ type Factory @entity {
    totalValueLockedUSD: BigDecimal!
    dfp2TotalSupply: BigDecimal!
    xdp2TotalSupply: BigDecimal!
+   xdp2Staked: BigDecimal!
    dfp2MarketCap: BigDecimal!
 }
 
