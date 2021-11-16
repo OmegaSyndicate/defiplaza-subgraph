@@ -19,6 +19,8 @@ import { calculateDailyTradeVolume, calculateHourlyTradeVolume, convertAmountToD
 
 export function handleLiquidityAdded(event: LiquidityAdded): void {
 	let factory = loadFactory();
+	let transaction = loadTransaction(event); // just store this transaction, to display last synced block
+	
 	let token = loadToken(event.params.token);
 	let dexToken = DexToken.getToken(event.params.token);
 	let tokenAmount = convertAmountToDecimal(event.params.tokenAmount, dexToken.decimals);
@@ -66,6 +68,8 @@ export function handleLiquidityAdded(event: LiquidityAdded): void {
 
 export function handleLiquidityRemoved(event: LiquidityRemoved): void {
 	let factory = loadFactory();
+	let transaction = loadTransaction(event); // just store this transaction, to display last synced block
+
 	let token = loadToken(event.params.token);
 	let dexToken = DexToken.getToken(event.params.token);
 	let tokenAmount = convertAmountToDecimal(event.params.tokenAmount, dexToken.decimals);
@@ -113,6 +117,8 @@ export function handleLiquidityRemoved(event: LiquidityRemoved): void {
 
 export function handleMultiLiquidityAdded(event: MultiLiquidityAdded): void {
 	let factory = loadFactory();
+	let transaction = loadTransaction(event);// just store this transaction, to display last synced block
+
 	let old = event.params.totalLPafter.minus(event.params.LPs); // old is new - difference
 	let percentage = event.params.LPs.toBigDecimal().div(old.toBigDecimal()); // new - old / old
 	let increase = BigDecimal.fromString("1").plus(percentage); // 1 + percentage
@@ -163,6 +169,8 @@ export function handleMultiLiquidityAdded(event: MultiLiquidityAdded): void {
 
 export function handleMultiLiquidityRemoved(event: MultiLiquidityRemoved): void {
 	let factory = loadFactory();
+	let transaction = loadTransaction(event); // just store this transaction, to display last synced block
+
 	let old = event.params.totalLPafter.plus(event.params.LPs); // old is new + difference
 	let percentage = event.params.LPs.toBigDecimal().div(old.toBigDecimal()); // new - old / old
 	let increase = BigDecimal.fromString("1").minus(percentage); // 1 - percentage
