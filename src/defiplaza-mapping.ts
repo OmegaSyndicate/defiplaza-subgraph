@@ -365,4 +365,21 @@ export function handleBootstrapBonus(event: BootstrapBonus): void { }
 
 export function handleBootstrapCompleted(event: BootstrapCompleted): void { }
 
-export function handleBootstrapped(event: Bootstrapped): void { }
+export function handleBootstrapped(event: Bootstrapped): void {
+	let factory = loadFactory();
+	let transaction = loadTransaction(event);
+	
+	let inputToken = loadToken(event.params.inputToken);
+	let outputToken = loadToken(event.params.outputToken);
+	let inputDexToken = DexToken.getToken(event.params.inputToken);
+	let outputDexToken = DexToken.getToken(event.params.outputToken);
+	let inputAmount = convertAmountToDecimal(event.params.inputAmount, inputDexToken.decimals);
+	let outputAmount = convertAmountToDecimal(event.params.outputAmount, outputDexToken.decimals);
+	let pair = loadPair(inputToken, outputToken);
+
+	inputToken.tokenAmount = inputToken.tokenAmount.plus(inputAmount);
+	inputToken.save();
+
+	outputToken.tokenAmount = outputToken.tokenAmount.minus(outputAmount);
+	outputToken.save();
+}
