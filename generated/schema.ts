@@ -377,6 +377,12 @@ export class Transaction extends Entity {
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("gasLimit", Value.fromBigInt(BigInt.zero()));
     this.set("gasPrice", Value.fromBigInt(BigInt.zero()));
+    this.set("type", Value.fromString(""));
+    this.set("inputToken", Value.fromString(""));
+    this.set("outputToken", Value.fromString(""));
+    this.set("inputAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("outputAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("swapUSD", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -439,6 +445,60 @@ export class Transaction extends Entity {
 
   set gasPrice(value: BigInt) {
     this.set("gasPrice", Value.fromBigInt(value));
+  }
+
+  get type(): string {
+    let value = this.get("type");
+    return value!.toString();
+  }
+
+  set type(value: string) {
+    this.set("type", Value.fromString(value));
+  }
+
+  get inputToken(): string {
+    let value = this.get("inputToken");
+    return value!.toString();
+  }
+
+  set inputToken(value: string) {
+    this.set("inputToken", Value.fromString(value));
+  }
+
+  get outputToken(): string {
+    let value = this.get("outputToken");
+    return value!.toString();
+  }
+
+  set outputToken(value: string) {
+    this.set("outputToken", Value.fromString(value));
+  }
+
+  get inputAmount(): BigDecimal {
+    let value = this.get("inputAmount");
+    return value!.toBigDecimal();
+  }
+
+  set inputAmount(value: BigDecimal) {
+    this.set("inputAmount", Value.fromBigDecimal(value));
+  }
+
+  get outputAmount(): BigDecimal {
+    let value = this.get("outputAmount");
+    return value!.toBigDecimal();
+  }
+
+  set outputAmount(value: BigDecimal) {
+    this.set("outputAmount", Value.fromBigDecimal(value));
+  }
+
+  get swapUSD(): BigDecimal {
+    let value = this.get("swapUSD");
+    return value!.toBigDecimal();
+  }
+
+  set swapUSD(value: BigDecimal) {
+    this.set("swapUSD", Value.fromBigDecimal(value));
   }
 }
 
@@ -874,6 +934,234 @@ export class HourlyToken extends Entity {
 
   static load(id: string): HourlyToken | null {
     return changetype<HourlyToken | null>(store.get("HourlyToken", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get date(): i32 {
+    let value = this.get("date");
+    return value!.toI32();
+  }
+
+  set date(value: i32) {
+    this.set("date", Value.fromI32(value));
+  }
+
+  get token(): string {
+    let value = this.get("token");
+    return value!.toString();
+  }
+
+  set token(value: string) {
+    this.set("token", Value.fromString(value));
+  }
+
+  get swapCount(): BigInt {
+    let value = this.get("swapCount");
+    return value!.toBigInt();
+  }
+
+  set swapCount(value: BigInt) {
+    this.set("swapCount", Value.fromBigInt(value));
+  }
+
+  get swapUSD(): BigDecimal {
+    let value = this.get("swapUSD");
+    return value!.toBigDecimal();
+  }
+
+  set swapUSD(value: BigDecimal) {
+    this.set("swapUSD", Value.fromBigDecimal(value));
+  }
+
+  get tokenAmount(): BigDecimal {
+    let value = this.get("tokenAmount");
+    return value!.toBigDecimal();
+  }
+
+  set tokenAmount(value: BigDecimal) {
+    this.set("tokenAmount", Value.fromBigDecimal(value));
+  }
+
+  get tokenPriceUSD(): BigDecimal {
+    let value = this.get("tokenPriceUSD");
+    return value!.toBigDecimal();
+  }
+
+  set tokenPriceUSD(value: BigDecimal) {
+    this.set("tokenPriceUSD", Value.fromBigDecimal(value));
+  }
+
+  get tokenPriceMin(): BigDecimal {
+    let value = this.get("tokenPriceMin");
+    return value!.toBigDecimal();
+  }
+
+  set tokenPriceMin(value: BigDecimal) {
+    this.set("tokenPriceMin", Value.fromBigDecimal(value));
+  }
+
+  get tokenPriceMax(): BigDecimal {
+    let value = this.get("tokenPriceMax");
+    return value!.toBigDecimal();
+  }
+
+  set tokenPriceMax(value: BigDecimal) {
+    this.set("tokenPriceMax", Value.fromBigDecimal(value));
+  }
+}
+
+export class WeeklyToken extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("date", Value.fromI32(0));
+    this.set("token", Value.fromString(""));
+    this.set("swapCount", Value.fromBigInt(BigInt.zero()));
+    this.set("swapUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenPriceUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenPriceMin", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenPriceMax", Value.fromBigDecimal(BigDecimal.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save WeeklyToken entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save WeeklyToken entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("WeeklyToken", id.toString(), this);
+    }
+  }
+
+  static load(id: string): WeeklyToken | null {
+    return changetype<WeeklyToken | null>(store.get("WeeklyToken", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get date(): i32 {
+    let value = this.get("date");
+    return value!.toI32();
+  }
+
+  set date(value: i32) {
+    this.set("date", Value.fromI32(value));
+  }
+
+  get token(): string {
+    let value = this.get("token");
+    return value!.toString();
+  }
+
+  set token(value: string) {
+    this.set("token", Value.fromString(value));
+  }
+
+  get swapCount(): BigInt {
+    let value = this.get("swapCount");
+    return value!.toBigInt();
+  }
+
+  set swapCount(value: BigInt) {
+    this.set("swapCount", Value.fromBigInt(value));
+  }
+
+  get swapUSD(): BigDecimal {
+    let value = this.get("swapUSD");
+    return value!.toBigDecimal();
+  }
+
+  set swapUSD(value: BigDecimal) {
+    this.set("swapUSD", Value.fromBigDecimal(value));
+  }
+
+  get tokenAmount(): BigDecimal {
+    let value = this.get("tokenAmount");
+    return value!.toBigDecimal();
+  }
+
+  set tokenAmount(value: BigDecimal) {
+    this.set("tokenAmount", Value.fromBigDecimal(value));
+  }
+
+  get tokenPriceUSD(): BigDecimal {
+    let value = this.get("tokenPriceUSD");
+    return value!.toBigDecimal();
+  }
+
+  set tokenPriceUSD(value: BigDecimal) {
+    this.set("tokenPriceUSD", Value.fromBigDecimal(value));
+  }
+
+  get tokenPriceMin(): BigDecimal {
+    let value = this.get("tokenPriceMin");
+    return value!.toBigDecimal();
+  }
+
+  set tokenPriceMin(value: BigDecimal) {
+    this.set("tokenPriceMin", Value.fromBigDecimal(value));
+  }
+
+  get tokenPriceMax(): BigDecimal {
+    let value = this.get("tokenPriceMax");
+    return value!.toBigDecimal();
+  }
+
+  set tokenPriceMax(value: BigDecimal) {
+    this.set("tokenPriceMax", Value.fromBigDecimal(value));
+  }
+}
+
+export class MonthlyToken extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("date", Value.fromI32(0));
+    this.set("token", Value.fromString(""));
+    this.set("swapCount", Value.fromBigInt(BigInt.zero()));
+    this.set("swapUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenAmount", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenPriceUSD", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenPriceMin", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tokenPriceMax", Value.fromBigDecimal(BigDecimal.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save MonthlyToken entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save MonthlyToken entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("MonthlyToken", id.toString(), this);
+    }
+  }
+
+  static load(id: string): MonthlyToken | null {
+    return changetype<MonthlyToken | null>(store.get("MonthlyToken", id));
   }
 
   get id(): string {

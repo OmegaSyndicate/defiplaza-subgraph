@@ -15,7 +15,7 @@ import {
 import { Swap } from "../generated/schema";
 import { DEX_TOKENS, DFP2_ADDRESS, ONE_BI, ZERO_BD } from "./constants";
 import { DexToken } from "./tokens";
-import { calculateDailyTradeVolume, calculateHourlyTradeVolume, convertAmountToDecimal, fetchDFP2TotalSupply, fetchTokenTotalSupply, fetchXDP2TotalSupply, getAverageUSD, getTVL, loadDaily, loadDailyToken, loadFactory, loadHourly, loadHourlyToken, loadPair, loadToken, loadTransaction } from "./util";
+import { calculateDailyTradeVolume, calculateHourlyTradeVolume, convertAmountToDecimal, fetchDFP2TotalSupply, fetchTokenTotalSupply, fetchXDP2TotalSupply, getAverageUSD, getTVL, loadDaily, loadDailyToken, loadFactory, loadHourly, loadHourlyToken, loadMonthlyToken, loadPair, loadToken, loadTransaction, loadWeeklyToken } from "./util";
 
 export function handleLiquidityAdded(event: LiquidityAdded): void {
 	let factory = loadFactory();
@@ -187,7 +187,7 @@ export function handleMultiLiquidityRemoved(event: MultiLiquidityRemoved): void 
 	}
 
 	let tvlAfter = getTVL();
-	let tvlDiff = tvlAfter.minus(tvlBefore);
+	let tvlDiff = tvlBefore.minus(tvlAfter); // we need the positive number here! So not after - before, but before - after
 
 	// Update Factory
 	factory.totalValueLockedUSD = tvlAfter;
@@ -199,7 +199,7 @@ export function handleMultiLiquidityRemoved(event: MultiLiquidityRemoved): void 
 	// // Update Hourly
 	let hourly = loadHourly(event);
 	hourly.liquidityCount = hourly.liquidityCount.plus(ONE_BI);
-	hourly.liquidityUSD = hourly.liquidityUSD.plus(tvlDiff);
+	hourly.liquidityUSD = hourly.liquidityUSD.minus(tvlDiff);
 	hourly.liquidityRemovedUSD = hourly.liquidityRemovedUSD.minus(tvlDiff);
 	hourly.totalValueLockedUSD = tvlAfter;
 	hourly.dfp2MarketCap = factory.dfp2TotalSupply.times(dfp2.tokenPriceUSD);
@@ -210,7 +210,7 @@ export function handleMultiLiquidityRemoved(event: MultiLiquidityRemoved): void 
 	// // Update Daily
 	let daily = loadDaily(event);
 	daily.liquidityCount = daily.liquidityCount.plus(ONE_BI);
-	daily.liquidityUSD = daily.liquidityUSD.plus(tvlDiff);
+	daily.liquidityUSD = daily.liquidityUSD.minus(tvlDiff);
 	daily.liquidityRemovedUSD = daily.liquidityRemovedUSD.minus(tvlDiff);
 	daily.totalValueLockedUSD = tvlAfter;
 	daily.dfp2MarketCap = factory.dfp2TotalSupply.times(dfp2.tokenPriceUSD);
@@ -284,8 +284,8 @@ export function handleSwapped(event: Swapped): void {
 	hourly.save();
 
 	let hourlyToken = loadHourlyToken(event, inputToken);
-	hourlyToken.swapCount = hourly.swapCount.plus(ONE_BI);
-	hourlyToken.swapUSD = hourly.swapUSD.plus(averageSwapUSD);
+	hourlyToken.swapCount = hourlyToken.swapCount.plus(ONE_BI);
+	hourlyToken.swapUSD = hourlyToken.swapUSD.plus(averageSwapUSD);
 	hourlyToken.tokenAmount = inputToken.tokenAmount;
 	hourlyToken.tokenPriceUSD = getAverageUSD().div(inputToken.tokenAmount);
 
@@ -325,8 +325,8 @@ export function handleSwapped(event: Swapped): void {
 	daily.save();
 
 	let dailyToken = loadDailyToken(event, inputToken);
-	dailyToken.swapCount = daily.swapCount.plus(ONE_BI);
-	dailyToken.swapUSD = daily.swapUSD.plus(averageSwapUSD);
+	dailyToken.swapCount = dailyToken.swapCount.plus(ONE_BI);
+	dailyToken.swapUSD = dailyToken.swapUSD.plus(averageSwapUSD);
 	dailyToken.tokenAmount = inputToken.tokenAmount;
 	dailyToken.tokenPriceUSD = getAverageUSD().div(inputToken.tokenAmount);
 
@@ -353,6 +353,38 @@ export function handleSwapped(event: Swapped): void {
 	}
 
 	dailyOutToken.save();
+
+	let weeklyToken = loadWeeklyToken(event, inputToken);
+	weeklyToken.swapCount = weeklyToken.swapCount.plus(ONE_BI);
+	weeklyToken.swapUSD = weeklyToken.swapUSD.plus(averageSwapUSD);
+	weeklyToken.tokenAmount = inputToken.tokenAmount;
+	weeklyToken.tokenPriceUSD = getAverageUSD().div(inputToken.tokenAmount);
+
+	if (weeklyToken.tokenPriceMin.equals(ZERO_BD) || weeklyToken.tokenPriceMin.gt(weeklyToken.tokenPriceUSD)) {
+		weeklyToken.tokenPriceMin = weeklyToken.tokenPriceUSD;
+	}
+
+	if (weeklyToken.tokenPriceMax.equals(ZERO_BD) || weeklyToken.tokenPriceMax.lt(weeklyToken.tokenPriceUSD)) {
+		weeklyToken.tokenPriceMax = weeklyToken.tokenPriceUSD;
+	}
+
+	weeklyToken.save();
+
+	let monthlyToken = loadMonthlyToken(event, inputToken);
+	monthlyToken.swapCount = monthlyToken.swapCount.plus(ONE_BI);
+	monthlyToken.swapUSD = monthlyToken.swapUSD.plus(averageSwapUSD);
+	monthlyToken.tokenAmount = inputToken.tokenAmount;
+	monthlyToken.tokenPriceUSD = getAverageUSD().div(inputToken.tokenAmount);
+
+	if (monthlyToken.tokenPriceMin.equals(ZERO_BD) || monthlyToken.tokenPriceMin.gt(monthlyToken.tokenPriceUSD)) {
+		monthlyToken.tokenPriceMin = monthlyToken.tokenPriceUSD;
+	}
+
+	if (monthlyToken.tokenPriceMax.equals(ZERO_BD) || monthlyToken.tokenPriceMax.lt(monthlyToken.tokenPriceUSD)) {
+		monthlyToken.tokenPriceMax = monthlyToken.tokenPriceUSD;
+	}
+
+	monthlyToken.save();
 }
 
 export function handleApproval(event: Approval): void { }

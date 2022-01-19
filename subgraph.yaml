@@ -31,12 +31,12 @@ dataSources:
            - name: ERC20
              file: ./abis/ERC20.json
         eventHandlers:
-           - event: Approval(indexed address,indexed address,uint256)
-             handler: handleApproval
-           - event: BootstrapBonus(address,address,uint256)
-             handler: handleBootstrapBonus
-           - event: BootstrapCompleted(address,address)
-             handler: handleBootstrapCompleted
+          #  - event: Approval(indexed address,indexed address,uint256)
+          #    handler: handleApproval
+          #  - event: BootstrapBonus(address,address,uint256)
+          #    handler: handleBootstrapBonus
+          #  - event: BootstrapCompleted(address,address)
+          #    handler: handleBootstrapCompleted
            - event: Bootstrapped(address,address,uint256,address,uint256)
              handler: handleBootstrapped
            - event: LiquidityAdded(address,address,uint256,uint256)
@@ -47,12 +47,12 @@ dataSources:
              handler: handleMultiLiquidityAdded
            - event: MultiLiquidityRemoved(address,uint256,uint256)
              handler: handleMultiLiquidityRemoved
-           - event: OwnershipTransferred(indexed address,indexed address)
-             handler: handleOwnershipTransferred
+          #  - event: OwnershipTransferred(indexed address,indexed address)
+          #    handler: handleOwnershipTransferred
            - event: Swapped(address,address,address,uint256,uint256)
              handler: handleSwapped
-           - event: Transfer(indexed address,indexed address,uint256)
-             handler: handleTransfer
+          #  - event: Transfer(indexed address,indexed address,uint256)
+          #    handler: handleTransfer
         file: ./src/defiplaza-mapping.ts
    - kind: ethereum/contract
      name: DFP2

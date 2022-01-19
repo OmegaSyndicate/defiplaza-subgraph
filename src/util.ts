@@ -1,6 +1,6 @@
 import { BigInt, BigDecimal, ethereum, Address } from '@graphprotocol/graph-ts';
 import { ERC20 } from '../generated/Contract/ERC20';
-import { Daily, DailyToken, Factory, Hourly, HourlyToken, Pair, Token, Transaction } from '../generated/schema';
+import { Daily, DailyToken, Factory, Hourly, HourlyToken, MonthlyToken, Pair, Token, Transaction, WeeklyToken } from '../generated/schema';
 import { BI_18, DFP2_ADDRESS, FACTORY_ADDRESS, ONE_BD, ONE_BI, STABLE_COINS, XDP2_ADDRESS, ZERO_BD, ZERO_BI } from './constants';
 import { DexToken } from './tokens';
 
@@ -48,6 +48,62 @@ export function loadDailyToken(event: ethereum.Event, token: Token): DailyToken 
 	}
 
 	return daily as DailyToken;
+}
+
+export function loadWeeklyToken(event: ethereum.Event, token: Token): WeeklyToken {
+	let timestamp = event.block.timestamp.toI32();
+	let timestampMs = (timestamp as i64) * 1000;
+
+	let d = new Date(timestampMs);
+	d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+	d.setUTCHours(0);
+	d.setUTCMinutes(0);
+	d.setUTCSeconds(0);
+
+	let startOf = d.getTime() / 1000;
+	let startOfString = token.id.toString().concat('-').concat(startOf.toString());
+
+	let object = WeeklyToken.load(startOfString);
+
+	if (object == null) {
+		object = new WeeklyToken(startOfString);
+		object.date = startOf as i32;
+		object.token = token.id;
+		object.swapCount = ZERO_BI;
+		object.swapUSD = ZERO_BD;
+		object.tokenAmount = ZERO_BD;
+		object.save();
+	}
+
+	return object as WeeklyToken;
+}
+
+export function loadMonthlyToken(event: ethereum.Event, token: Token): MonthlyToken {
+	let timestamp = event.block.timestamp.toI32();
+	let timestampMs = (timestamp as i64) * 1000;
+	
+	let d = new Date(timestampMs);
+	d.setUTCDate(1);
+	d.setUTCHours(0);
+	d.setUTCMinutes(0);
+	d.setUTCSeconds(0);
+
+	let startOf = d.getTime() / 1000;
+	let startOfString = token.id.toString().concat('-').concat(startOf.toString());
+
+	let object = MonthlyToken.load(startOfString);
+
+	if (object == null) {
+		object = new MonthlyToken(startOfString);
+		object.date = startOf as i32;
+		object.token = token.id;
+		object.swapCount = ZERO_BI;
+		object.swapUSD = ZERO_BD;
+		object.tokenAmount = ZERO_BD;
+		object.save();
+	}
+
+	return object as MonthlyToken;
 }
 
 export function loadFactory(): Factory {

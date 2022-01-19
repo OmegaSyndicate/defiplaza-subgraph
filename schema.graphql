@@ -42,6 +42,12 @@ type Transaction @entity {
    timestamp: BigInt!
    gasLimit: BigInt!
    gasPrice: BigInt!
+   type: String!
+   inputToken: Token!
+   outputToken: Token!
+   inputAmount: BigDecimal!
+   outputAmount: BigDecimal!
+   swapUSD: BigDecimal!
 }
 
 type Daily @entity {
@@ -87,6 +93,30 @@ type DailyToken @entity {
 }
 
 type HourlyToken @entity {
+   id: ID!
+   date: Int!
+   token: Token!
+   swapCount: BigInt!
+   swapUSD: BigDecimal!
+   tokenAmount: BigDecimal!
+   tokenPriceUSD: BigDecimal!
+   tokenPriceMin: BigDecimal!
+   tokenPriceMax: BigDecimal!
+}
+
+type WeeklyToken @entity {
+   id: ID!
+   date: Int!
+   token: Token!
+   swapCount: BigInt!
+   swapUSD: BigDecimal!
+   tokenAmount: BigDecimal!
+   tokenPriceUSD: BigDecimal!
+   tokenPriceMin: BigDecimal!
+   tokenPriceMax: BigDecimal!
+}
+
+type MonthlyToken @entity {
    id: ID!
    date: Int!
    token: Token!
