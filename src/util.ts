@@ -1,6 +1,6 @@
 import { BigInt, BigDecimal, ethereum, Address } from '@graphprotocol/graph-ts';
 import { ERC20 } from '../generated/Contract/ERC20';
-import { Daily, DailyToken, Factory, Hourly, HourlyToken, MonthlyToken, Pair, Token, Transaction, WeeklyToken } from '../generated/schema';
+import { Daily, DailyToken, Factory, Hourly, HourlyToken, MonthlyToken, Pair, Token, Transaction, Weekly, WeeklyToken } from '../generated/schema';
 import { BI_18, DFP2_ADDRESS, FACTORY_ADDRESS, ONE_BD, ONE_BI, STABLE_COINS, XDP2_ADDRESS, ZERO_BD, ZERO_BI } from './constants';
 import { DexToken } from './tokens';
 
@@ -13,6 +13,8 @@ export function loadDaily(event: ethereum.Event): Daily {
 	let daily = Daily.load(startOfDayString);
 
 	if (daily == null) {
+		const factory = loadFactory();
+
 		daily = new Daily(startOfDayString);
 		daily.date = startOfDay;
 		daily.swapCount = ZERO_BI;
@@ -23,10 +25,48 @@ export function loadDaily(event: ethereum.Event): Daily {
 		daily.liquidityRemovedUSD = ZERO_BD;
 		daily.totalValueLockedUSD = getTVL();
 		daily.tradeVolumeUSD = ZERO_BD;
-		daily.save();
+		daily.dfp2MarketCap = factory.dfp2MarketCap;
+		daily.xdp2TotalSupply = factory.xdp2TotalSupply;
+		// daily.save();
 	}
 
 	return daily as Daily;
+}
+
+export function loadWeekly(event: ethereum.Event): Weekly {
+	let timestamp = event.block.timestamp.toI32();
+	let timestampMs = (timestamp as i64) * 1000;
+
+	let d = new Date(timestampMs);
+	d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+	d.setUTCHours(0);
+	d.setUTCMinutes(0);
+	d.setUTCSeconds(0);
+
+	let startOf = d.getTime() / 1000;
+	let startOfString = startOf.toString();
+
+	let object = Weekly.load(startOfString);
+
+	if (object == null) {
+		const factory = loadFactory();
+
+		object = new Weekly(startOfString);
+		object.date = startOf as i32;
+		object.swapCount = ZERO_BI;
+		object.swapUSD = ZERO_BD;
+		object.liquidityCount = ZERO_BI;
+		object.liquidityUSD = ZERO_BD;
+		object.liquidityAddedUSD = ZERO_BD;
+		object.liquidityRemovedUSD = ZERO_BD;
+		object.totalValueLockedUSD = getTVL();
+		object.tradeVolumeUSD = ZERO_BD;
+		object.dfp2MarketCap = factory.dfp2MarketCap;
+		object.xdp2TotalSupply = factory.xdp2TotalSupply;
+		// object.save();
+	}
+
+	return object as Weekly;
 }
 
 export function loadDailyToken(event: ethereum.Event, token: Token): DailyToken {
@@ -44,7 +84,7 @@ export function loadDailyToken(event: ethereum.Event, token: Token): DailyToken 
 		daily.swapCount = ZERO_BI;
 		daily.swapUSD = ZERO_BD;
 		daily.tokenAmount = ZERO_BD;
-		daily.save();
+		// daily.save();
 	}
 
 	return daily as DailyToken;
@@ -72,7 +112,7 @@ export function loadWeeklyToken(event: ethereum.Event, token: Token): WeeklyToke
 		object.swapCount = ZERO_BI;
 		object.swapUSD = ZERO_BD;
 		object.tokenAmount = ZERO_BD;
-		object.save();
+		// object.save();
 	}
 
 	return object as WeeklyToken;
@@ -100,7 +140,7 @@ export function loadMonthlyToken(event: ethereum.Event, token: Token): MonthlyTo
 		object.swapCount = ZERO_BI;
 		object.swapUSD = ZERO_BD;
 		object.tokenAmount = ZERO_BD;
-		object.save();
+		// object.save();
 	}
 
 	return object as MonthlyToken;
@@ -117,7 +157,7 @@ export function loadFactory(): Factory {
 		factory.xdp2TotalSupply = ZERO_BD;
 		factory.dfp2MarketCap = ZERO_BD;
 		factory.xdp2Staked = ZERO_BD;
-		factory.save();
+		// factory.save();
 	}
 
 	return factory as Factory;
@@ -132,6 +172,8 @@ export function loadHourly(event: ethereum.Event): Hourly {
 	let hourly = Hourly.load(startOfHourString);
 
 	if (hourly == null) {
+		const factory = loadFactory();
+
 		hourly = new Hourly(startOfHourString);
 		hourly.date = startOfHour;
 		hourly.swapCount = ZERO_BI;
@@ -142,7 +184,9 @@ export function loadHourly(event: ethereum.Event): Hourly {
 		hourly.liquidityRemovedUSD = ZERO_BD;
 		hourly.totalValueLockedUSD = getTVL();
 		hourly.tradeVolumeUSD = ZERO_BD;
-		hourly.save();
+		hourly.dfp2MarketCap = factory.dfp2MarketCap;
+		hourly.xdp2TotalSupply = factory.xdp2TotalSupply;
+		// hourly.save();
 	}
 
 	return hourly as Hourly;
@@ -163,7 +207,7 @@ export function loadHourlyToken(event: ethereum.Event, token: Token): HourlyToke
 		hourly.swapCount = ZERO_BI;
 		hourly.swapUSD = ZERO_BD;
 		hourly.tokenAmount = ZERO_BD;
-		hourly.save();
+		// hourly.save();
 	}
 
 	return hourly as HourlyToken;
@@ -206,7 +250,7 @@ export function loadPair(tokenA: Token, tokenB: Token): Pair {
 		pair.baseToken = tokens[0].id;
 		pair.quoteToken = tokens[1].id;
 		pair.swapCount = ZERO_BI;
-		pair.save();
+		// pair.save();
 	}
 
 	return pair as Pair;

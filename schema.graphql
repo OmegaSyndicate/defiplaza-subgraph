@@ -1,27 +1,9 @@
-type Swap @entity {
-   id: ID!
-   timestamp: BigInt!
-   transaction: Transaction!
-   sender: Bytes!
-   pair: Pair!
-   inputToken: Token!
-   outputToken: Token!
-   inputAmount: BigDecimal!
-   outputAmount: BigDecimal!
-   swapUSD: BigDecimal!
-}
-
-type Pair @entity {
-   id: ID!
-   baseToken: Token!
-   quoteToken: Token!
-   swapCount: BigInt!
-}
-
 type Factory @entity {
    id: ID!
    swapCount: BigInt!
    totalValueLockedUSD: BigDecimal!
+   totalTradeVolumeUSD: BigDecimal!
+   totalFeesEarnedUSD: BigDecimal!
    dfp2TotalSupply: BigDecimal!
    xdp2TotalSupply: BigDecimal!
    xdp2Staked: BigDecimal!
@@ -36,6 +18,26 @@ type Token @entity {
    tokenPriceUSD: BigDecimal!
 }
 
+type Pair @entity {
+   id: ID!
+   baseToken: Token!
+   quoteToken: Token!
+   swapCount: BigInt!
+}
+
+type Swap @entity {
+   id: ID!
+   timestamp: BigInt!
+   transaction: Transaction!
+   sender: Bytes!
+   pair: Pair!
+   inputToken: Token!
+   outputToken: Token!
+   inputAmount: BigDecimal!
+   outputAmount: BigDecimal!
+   swapUSD: BigDecimal!
+}
+
 type Transaction @entity {
    id: ID!
    blockNumber: BigInt!
@@ -48,6 +50,36 @@ type Transaction @entity {
    inputAmount: BigDecimal!
    outputAmount: BigDecimal!
    swapUSD: BigDecimal!
+}
+
+type Monthly @entity {
+   id: ID!
+   date: Int!
+   swapCount: BigInt!
+   swapUSD: BigDecimal!
+   liquidityCount: BigInt!
+   liquidityUSD: BigDecimal!
+   liquidityAddedUSD: BigDecimal!
+   liquidityRemovedUSD: BigDecimal!
+   totalValueLockedUSD: BigDecimal!
+   tradeVolumeUSD: BigDecimal!
+   dfp2MarketCap: BigDecimal!
+   xdp2TotalSupply: BigDecimal!
+}
+
+type Weekly @entity {
+   id: ID!
+   date: Int!
+   swapCount: BigInt!
+   swapUSD: BigDecimal!
+   liquidityCount: BigInt!
+   liquidityUSD: BigDecimal!
+   liquidityAddedUSD: BigDecimal!
+   liquidityRemovedUSD: BigDecimal!
+   totalValueLockedUSD: BigDecimal!
+   tradeVolumeUSD: BigDecimal!
+   dfp2MarketCap: BigDecimal!
+   xdp2TotalSupply: BigDecimal!
 }
 
 type Daily @entity {
@@ -80,19 +112,7 @@ type Hourly @entity {
    xdp2TotalSupply: BigDecimal!
 }
 
-type DailyToken @entity {
-   id: ID!
-   date: Int!
-   token: Token!
-   swapCount: BigInt!
-   swapUSD: BigDecimal!
-   tokenAmount: BigDecimal!
-   tokenPriceUSD: BigDecimal!
-   tokenPriceMin: BigDecimal!
-   tokenPriceMax: BigDecimal!
-}
-
-type HourlyToken @entity {
+type MonthlyToken @entity {
    id: ID!
    date: Int!
    token: Token!
@@ -116,7 +136,19 @@ type WeeklyToken @entity {
    tokenPriceMax: BigDecimal!
 }
 
-type MonthlyToken @entity {
+type DailyToken @entity {
+   id: ID!
+   date: Int!
+   token: Token!
+   swapCount: BigInt!
+   swapUSD: BigDecimal!
+   tokenAmount: BigDecimal!
+   tokenPriceUSD: BigDecimal!
+   tokenPriceMin: BigDecimal!
+   tokenPriceMax: BigDecimal!
+}
+
+type HourlyToken @entity {
    id: ID!
    date: Int!
    token: Token!

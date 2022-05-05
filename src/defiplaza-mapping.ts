@@ -41,6 +41,7 @@ export function handleLiquidityAdded(event: LiquidityAdded): void {
 	factory.dfp2TotalSupply = fetchDFP2TotalSupply();
 	factory.dfp2MarketCap = factory.dfp2TotalSupply.times(dfp2.tokenPriceUSD);
 	factory.xdp2TotalSupply = fetchXDP2TotalSupply();
+	factory.totalFeesEarnedUSD = factory.totalFeesEarnedUSD.plus(inputUSD.div(BigDecimal.fromString('1000')));
 	factory.save();
 
 	// // Update Hourly
@@ -142,6 +143,7 @@ export function handleMultiLiquidityAdded(event: MultiLiquidityAdded): void {
 	factory.dfp2TotalSupply = fetchDFP2TotalSupply();
 	factory.dfp2MarketCap = factory.dfp2TotalSupply.times(dfp2.tokenPriceUSD);
 	factory.xdp2TotalSupply = fetchXDP2TotalSupply();
+	factory.totalFeesEarnedUSD = factory.totalFeesEarnedUSD.plus(tvlDiff.div(BigDecimal.fromString('1000')));
 	factory.save();
 
 	// // Update Hourly
@@ -272,6 +274,8 @@ export function handleSwapped(event: Swapped): void {
 	factory.swapCount = factory.swapCount.plus(ONE_BI);
 	factory.dfp2TotalSupply = fetchDFP2TotalSupply();
 	factory.dfp2MarketCap = factory.dfp2TotalSupply.times(dfp2.tokenPriceUSD);
+	factory.totalTradeVolumeUSD = factory.totalTradeVolumeUSD.plus(averageSwapUSD);
+	factory.totalFeesEarnedUSD = factory.totalFeesEarnedUSD.plus(averageSwapUSD.div(BigDecimal.fromString('1000')));
 	factory.save();
 
 	// Update Hourly
